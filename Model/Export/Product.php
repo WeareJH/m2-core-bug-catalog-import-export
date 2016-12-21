@@ -1,10 +1,10 @@
 <?php
-namespace JH\CoreBugCatalogImportExport\Model\Export;
+namespace Jh\CoreBugCatalogImportExport\Model\Export;
 
-use Magento\ImportExport\Model\Import;
+use \Magento\ImportExport\Model\Import;
 use \Magento\Store\Model\Store;
 use \Magento\CatalogImportExport\Model\Import\Product as ImportProduct;
-use Magento\CatalogImportExport\Model\Export\Product as MagentoProduct;
+use \Magento\CatalogImportExport\Model\Export\Product as MagentoProduct;
 
 class Product extends MagentoProduct
 {
