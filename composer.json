@@ -1,0 +1,16 @@
+{
+  "name": "wearejh/m2-core-bug-catalog-import-export",
+  "description": "Fixes html entities bug for product exports.",
+  "require": {
+    "php": "~7.0.0"
+  },
+  "type": "magento2-module",
+  "extra": {
+    "map": [
+      [
+        "*",
+        "Jh/CoreBugCatalogImportExport"
+      ]
+    ]
+  }
+}
