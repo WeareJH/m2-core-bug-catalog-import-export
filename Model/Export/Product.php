@@ -6,6 +6,11 @@ use \Magento\Store\Model\Store;
 use \Magento\CatalogImportExport\Model\Import\Product as ImportProduct;
 use \Magento\CatalogImportExport\Model\Export\Product as MagentoProduct;
 
+/**
+ * Class Product
+ * @package Jh\CoreBugCatalogImportExport\Model\Export
+ * @author Anthony Bates <anthony@wearejh.com>
+ */
 class Product extends MagentoProduct
 {
     /**
