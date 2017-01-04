@@ -5,12 +5,12 @@
     "php": "~7.0.0"
   },
   "type": "magento2-module",
-  "extra": {
-    "map": [
-      [
-        "*",
-        "Jh\\CoreBugCatalogImportExport"
-      ]
-    ]
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Jh\\CoreBugCatalogImportExport\\": ""
+    }
   }
 }
