@@ -32,22 +32,16 @@ class Product extends MagentoProduct
         $this->_prepareEntityCollection($entityCollection);
         $this->paginateCollection($page, $this->getItemsPerPage());
 
-        while ($page < $entityCollection->getLastPageNumber()) {
+        $writer->setHeaderCols($this->_getHeaderColumns());
+
+        while ($page <= $entityCollection->getLastPageNumber()) {
             ++$page;
             $entityCollection->setCurPage($page);
 
-            if ($entityCollection->count() == 0) {
-                break;
-            }
             $exportData = $this->getExportData();
-            if ($page == 1) {
-                $writer->setHeaderCols($this->_getHeaderColumns());
-            }
+
             foreach ($exportData as $dataRow) {
                 $writer->writeRow($this->_customFieldsMapping($dataRow));
-            }
-            if ($entityCollection->getCurPage() >= $entityCollection->getLastPageNumber()) {
-                break;
             }
         }
         return $writer->getContents();
