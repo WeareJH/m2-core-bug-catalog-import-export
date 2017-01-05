@@ -1,5 +1,5 @@
 # Magento 2 Core Bug Fix for Module Catalog Import Export
-This module fixes an issue where the product export would create duplicate rows when a product had HTML Entities in the description field. This Module has been tested with Magento CE 2.1.2.
+This module fixes an issue where the product export would create duplicate rows when a product had HTML Entities in the description field. This Module has been tested with the following Magento versions CE 2.1.2, CE 2.1.3. 
 
 ## Installation
 This module is installable via `Composer`.
