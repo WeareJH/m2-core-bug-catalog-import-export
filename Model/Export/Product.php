@@ -24,14 +24,18 @@ class Product extends MagentoProduct
         set_time_limit(0);
 
         $writer = $this->getWriter();
-        $page = 0;
-        while (true) {
+        $page   = 0;
+
+        $entityCollection = $this->_getEntityCollection(true);
+        $entityCollection->setOrder('entity_id', 'asc');
+        $entityCollection->setStoreId(Store::DEFAULT_STORE_ID);
+        $this->_prepareEntityCollection($entityCollection);
+        $this->paginateCollection($page, $this->getItemsPerPage());
+
+        while ($page < $entityCollection->getLastPageNumber()) {
             ++$page;
-            $entityCollection = $this->_getEntityCollection(true);
-            $entityCollection->setOrder('entity_id', 'asc');
-            $entityCollection->setStoreId(Store::DEFAULT_STORE_ID);
-            $this->_prepareEntityCollection($entityCollection);
-            $this->paginateCollection($page, $this->getItemsPerPage());
+            $entityCollection->setCurPage($page);
+
             if ($entityCollection->count() == 0) {
                 break;
             }
