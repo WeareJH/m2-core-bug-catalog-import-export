@@ -2,4 +2,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\CatalogImportExport\Model\Export\Product"
                 type="Jh\CoreBugCatalogImportExport\Model\Export\Product"/>
+    <preference for="Magento\CatalogImportExport\Model\Import\Product"
+                type="Jh\CoreBugCatalogImportExport\Model\Import\Product"/>
 </config>
