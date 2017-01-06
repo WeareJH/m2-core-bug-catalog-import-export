@@ -1,6 +1,10 @@
 <?php
 namespace Jh\CoreBugCatalogImportExport\Model\Import;
 
+use \Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface as ValidatorInterface;
+use \Magento\Framework\Stdlib\DateTime;
+use \Magento\ImportExport\Model\Import;
+use \Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingError;
 use \Magento\CatalogImportExport\Model\Import\Product as MagentoProduct;
 
 /**
