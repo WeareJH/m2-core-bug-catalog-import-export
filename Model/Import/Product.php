@@ -45,7 +45,30 @@ class Product extends MagentoProduct
             $entityTable = $this->_resourceFactory->create()->getEntityTable();
         }
         if ($entityRowsUp) {
-            $this->_connection->insertOnDuplicate($entityTable, $entityRowsUp, ['updated_at', 'attribute_set_id']);
+            $entityRowsUpWithAtt = [];
+            foreach ($entityRowsUp as $key => $value) {
+                // if we don't have any attribute set updates continue loop
+                if (!isset($value['isAttrSetUpdate'])) {
+                    continue;
+                }
+                // Remove the flag so the db write doesn't fall over and unset the key from original parent array
+                unset($value['isAttrSetUpdate'], $entityRowsUp[$key]);
+
+                // push to a new array
+                $entityRowsUpWithAtt[] = $value;
+            }
+
+            // Check counts of both arrays and run corrected queries
+
+            // with attribute set codes
+            if (count($entityRowsUpWithAtt) > 0) {
+                $this->_connection->insertOnDuplicate($entityTable, $entityRowsUpWithAtt, ['updated_at', 'attribute_set_id']);
+            }
+
+            // without attribute set codes
+            if (count($entityRowsUp) > 0) {
+                $this->_connection->insertOnDuplicate($entityTable, $entityRowsUp, ['updated_at']);
+            }
         }
         if ($entityRowsIn) {
             $this->_connection->insertMultiple($entityTable, $entityRowsIn);
@@ -124,14 +147,26 @@ class Product extends MagentoProduct
                 // 1. Entity phase
                 if (isset($this->_oldSku[$rowSku])) {
                     // existing row
-                    $entityRowsUp[] = [
-                        'updated_at' => (new \DateTime())->format(DateTime::DATETIME_PHP_FORMAT),
-                        $this->getProductEntityLinkField() => $this->_oldSku[$rowSku][$this->getProductEntityLinkField()],
-                        'attribute_set_id' => isset($this->_attrSetNameToId[$rowData['attribute_set_code']])
-                            ? $this->_attrSetNameToId[$rowData['attribute_set_code']]
-                            : $this->_oldSku[$rowSku]['attr_set_id'],
-                    ];
-                    $rowData[self::COL_ATTR_SET] = $rowData['attribute_set_code'];
+                    if (isset($rowData['attribute_set_code'])) {
+                        $entityRowsUp[] = [
+                            'updated_at' => (new \DateTime())->format(DateTime::DATETIME_PHP_FORMAT),
+                            // flag this as an attribute set update so we can correct the write query later
+                            'isAttrSetUpdate' => true,
+                            $this->getProductEntityLinkField() => $this->_oldSku[$rowSku][$this->getProductEntityLinkField()],
+                            'attribute_set_id' => isset($this->_attrSetNameToId[$rowData['attribute_set_code']])
+                                ? $this->_attrSetNameToId[$rowData['attribute_set_code']]
+                                : $this->_oldSku[$rowSku]['attr_set_id'],
+                        ];
+                        $rowData[self::COL_ATTR_SET] = $rowData['attribute_set_code'];
+                    } else {
+                        // existing row
+                        $entityRowsUp[] = [
+                            'updated_at' => (new \DateTime())->format(DateTime::DATETIME_PHP_FORMAT),
+                            $this->getProductEntityLinkField()
+                            => $this->_oldSku[$rowSku][$this->getProductEntityLinkField()],
+                        ];
+                    }
+
                 } else {
                     if (!$productLimit || $productsQty < $productLimit) {
                         $entityRowsIn[$rowSku] = [
